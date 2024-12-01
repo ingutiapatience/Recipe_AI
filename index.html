@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Recipe Generator</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="container">
+        <h1>AI Recipe Generator</h1>
+        <form id="recipeForm">
+            <label for="ingredients">Enter ingredients (comma-separated):</label>
+            <input type="text" id="ingredients" name="ingredients" placeholder="e.g., chicken, rice, garlic" required>
+            <button type="submit">Generate Recipe</button>
+        </form>
+        <div id="output" class="output"></div>
+    </div>
+
+    <script>
+        document.getElementById('recipeForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const ingredients = document.getElementById('ingredients').value;
+            const response = await fetch('/generate_recipe', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ ingredients })
+            });
+            const data = await response.json();
+            const output = document.getElementById('output');
+            output.innerHTML = data.recipe ? `<h2>Recipe:</h2><p>${data.recipe}</p>` : `<p>Error: ${data.error}</p>`;
+        });
+    </script>
+</body>
+</html>
